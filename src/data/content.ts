@@ -75,6 +75,16 @@ export interface SiteContent {
     langSwitchAria: string;
     skipToContent: string;
   };
+  /** Terminal-style section index tags (rendered uppercased via CSS). */
+  sections: {
+    signal: string;
+    work: string;
+    method: string;
+    /** Kept as "open source" in both languages by design. */
+    oss: string;
+    bio: string;
+    contact: string;
+  };
   hero: {
     eyebrow: string;
     /** The brand motto. EN: "orchestrating agents". */
@@ -128,6 +138,8 @@ export interface SiteContent {
   now: {
     title: string;
     intro: string;
+    /** Dedicated meta/social description for the /now route (F505). */
+    metaDescription: string;
     /** "Updated" label + a human date string. */
     updatedLabel: string;
     updatedDate: string;
@@ -157,6 +169,14 @@ const en: SiteContent = {
     langLabel: 'PT',
     langSwitchAria: 'Mudar para português',
     skipToContent: 'Skip to content',
+  },
+  sections: {
+    signal: 'signal',
+    work: 'work',
+    method: 'method',
+    oss: 'open source',
+    bio: 'before the agents',
+    contact: 'contact',
   },
   hero: {
     eyebrow: 'ZaMpA — solo developer',
@@ -261,6 +281,8 @@ const en: SiteContent = {
     title: 'Now',
     intro:
       "What I'm focused on right now — a living page in the spirit of nownownow.com. Detail deepens by access level.",
+    metaDescription:
+      "What ZaMpA is focused on right now — a living /now page: building, shipping, and open-sourcing, with detail that deepens by access level.",
     updatedLabel: 'Updated',
     updatedDate: 'July 2026',
     backHome: 'Back home',
@@ -328,7 +350,7 @@ const pt: SiteContent = {
   meta: {
     title: 'ZaMpA — desenvolvedor solo, orquestrando agentes',
     description:
-      'ZaMpA (zampa.dev) — desenvolvedor solo entregando ferramentas de DeFi e IA em produção orquestrando times de agentes de IA que codam.',
+      'ZaMpA (zampa.dev) — desenvolvedor solo entregando ferramentas de DeFi e IA em produção orquestrando times de agentes de IA que escrevem código.',
     ogTitle: 'ZaMpA — orquestrando agentes',
   },
   nav: {
@@ -340,12 +362,20 @@ const pt: SiteContent = {
     langSwitchAria: 'Switch to English',
     skipToContent: 'Pular para o conteúdo',
   },
+  sections: {
+    signal: 'sinal',
+    work: 'trabalho',
+    method: 'método',
+    oss: 'open source',
+    bio: 'antes dos agentes',
+    contact: 'contato',
+  },
   hero: {
     eyebrow: 'ZaMpA — desenvolvedor solo',
     motto: 'orquestrando agentes',
     headline: ['Entregando produtos reais,', 'orquestrando agentes.'],
     support:
-      'Construo e opero software em produção sozinho — dirigindo times de agentes de IA que codam, do conceito ao deploy num ritmo que antes exigia um time inteiro.',
+      'Construo e opero software em produção sozinho — dirigindo times de agentes de IA que escrevem código, do conceito ao deploy num ritmo que antes exigia um time inteiro.',
     ctaPrimary: { label: 'Ver o trabalho', href: '#work' },
     ctaSecondary: { label: 'No que estou agora', href: '/now' },
   },
@@ -386,7 +416,7 @@ const pt: SiteContent = {
     heading: 'Como eu trabalho',
     body: [
       'Eu não escrevo cada linha — eu dirijo. Minha alavanca é a orquestração: decompor um produto em trabalho que um conjunto de agentes de IA executa em paralelo, e então revisar, integrar e entregar.',
-      'É uma pessoa operando com a vazão de um time pequeno, sem perder a coerência de uma única cabeça segurando o sistema inteiro.',
+      'É uma pessoa operando com a produtividade de um time pequeno, sem perder a coerência de uma única cabeça segurando o sistema inteiro.',
     ],
     points: [
       'Decompor o escopo em tarefas paralelizáveis de agentes',
@@ -423,12 +453,12 @@ const pt: SiteContent = {
     heading: 'Antes dos agentes',
     body: [
       'Passei uma década como jogador profissional de Counter-Strike (2008–2018, INTZ e CNB) e depois fui técnico do elenco da Santos e-Sports — anos lendo sistemas sob pressão e fazendo um time executar.',
-      'No início de 2021 fui do Bitcoin ladeira abaixo no DeFi e comecei a construir as ferramentas que eu queria que existissem. O mesmo instinto de competir: entender o sistema a fundo e agir mais rápido que todo mundo.',
+      'No início de 2021 mergulhei do Bitcoin de cabeça no DeFi e comecei a construir as ferramentas que eu queria que existissem. O mesmo instinto de competir: entender o sistema a fundo e agir mais rápido que todo mundo.',
     ],
   },
   contact: {
     heading: 'Fala comigo',
-    text: 'Aberto a colaborações, problemas difíceis e as oportunidades certas.',
+    text: 'Aberto a colaborações, problemas difíceis e às oportunidades certas.',
     links: [
       { label: 'GitHub', href: 'https://github.com/ZaMpAdAKiNg', handle: '@ZaMpAdAKiNg' },
       { label: 'RektCheck', href: 'https://rektcheck.xyz', handle: 'rektcheck.xyz' },
@@ -442,7 +472,9 @@ const pt: SiteContent = {
   now: {
     title: 'Agora',
     intro:
-      'No que estou focado agora — uma página viva, no espírito do nownownow.com. O detalhe aprofunda por nível de acesso.',
+      'No que estou focado agora — uma página viva, no espírito do nownownow.com. O detalhe se aprofunda conforme o nível de acesso.',
+    metaDescription:
+      'No que o ZaMpA está focado agora — uma página /now viva: construindo, entregando e abrindo código, com o detalhe se aprofundando conforme o nível de acesso.',
     updatedLabel: 'Atualizado',
     updatedDate: 'Julho de 2026',
     backHome: 'Voltar ao início',
@@ -481,7 +513,7 @@ const pt: SiteContent = {
           },
           {
             label: 'Método',
-            text: 'Operando um estúdio de uma pessoa com vazão de time pequeno — feliz em mostrar como, ao vivo.',
+            text: 'Operando um estúdio de uma pessoa com a produtividade de um time pequeno — feliz em mostrar como, ao vivo.',
           },
           {
             label: 'Disponibilidade',
