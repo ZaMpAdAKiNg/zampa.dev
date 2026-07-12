@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import vercel from '@astrojs/vercel';
+import sitemap from '@astrojs/sitemap';
 
 // zampa.dev — foundation config.
 // - Static by default. Pages that consume the build-time GitHub signal opt into
@@ -22,5 +23,23 @@ export default defineConfig({
     routing: {
       prefixDefaultLocale: false,
     },
+  },
+  integrations: [
+    sitemap({
+      // Emit reciprocal <xhtml:link hreflang> entries so the sitemap mirrors the
+      // per-page alternates. Excludes the 301 redirect stubs automatically.
+      i18n: {
+        defaultLocale: 'en',
+        locales: { en: 'en', pt: 'pt-BR' },
+      },
+    }),
+  ],
+  // Old design-review routes (chooser + variant A/B split) collapsed into the
+  // homepage. 301 so any links/crawls already pointing at them consolidate.
+  redirects: {
+    '/a': { status: 301, destination: '/' },
+    '/b': { status: 301, destination: '/' },
+    '/pt/a': { status: 301, destination: '/pt' },
+    '/pt/b': { status: 301, destination: '/pt' },
   },
 });
