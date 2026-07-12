@@ -1,0 +1,62 @@
+---
+// Seo — FOUNDATION-OWNED. Single source of truth for per-route SEO/social head
+// tags: canonical, reciprocal hreflang alternates (en / pt-BR / x-default),
+// Open Graph (incl. absolute og:url + og:image + locale), and Twitter card.
+// Included inside the <head> of BOTH the homepage (VariantB) and BaseLayout
+// (/now). All URLs are absolute, derived from `site` (astro.config) + pathname.
+import { localizeHref } from '../lib/i18n';
+import type { Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+  /** Page title (also used as Twitter/OG title unless ogTitle is given). */
+  title: string;
+  description: string;
+  ogTitle?: string;
+  ogType?: string;
+  /** Astro.url.pathname of the current route. */
+  pathname: string;
+}
+
+const { lang, title, description, ogTitle, ogType = 'website', pathname } = Astro.props as Props;
+
+// `site` is set in astro.config (https://zampa.dev) — new URL yields absolute.
+const site = Astro.site ?? new URL('https://zampa.dev');
+const abs = (p: string) => new URL(p, site).href;
+
+const canonical = abs(pathname);
+
+// Reciprocal language alternates: strip the /pt prefix to a language-agnostic
+// base, then resolve both localized hrefs so every route points at its twin.
+const base = pathname.replace(/^\/pt(\/|$)/, '/').replace(/\/$/, '') || '/';
+const enHref = abs(localizeHref(base, 'en'));
+const ptHref = abs(localizeHref(base, 'pt'));
+
+const ogImage = abs(`/og/${lang}.png`);
+const ogLocale = lang === 'pt' ? 'pt_BR' : 'en_US';
+const ogAltLocale = lang === 'pt' ? 'en_US' : 'pt_BR';
+const socialTitle = ogTitle ?? title;
+---
+
+<link rel="canonical" href={canonical} />
+
+<link rel="alternate" hreflang="en" href={enHref} />
+<link rel="alternate" hreflang="pt-BR" href={ptHref} />
+<link rel="alternate" hreflang="x-default" href={enHref} />
+
+<meta property="og:title" content={socialTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonical} />
+<meta property="og:site_name" content="zampa.dev" />
+<meta property="og:locale" content={ogLocale} />
+<meta property="og:locale:alternate" content={ogAltLocale} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={socialTitle} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={socialTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
