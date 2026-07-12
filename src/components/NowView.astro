@@ -10,7 +10,8 @@ const n = t.now;
 <BaseLayout
   lang={lang}
   title={`${n.title} — ${t.meta.ogTitle}`}
-  description={t.meta.description}
+  description={n.metaDescription}
+  ogTitle={t.meta.ogTitle}
   langLabel={t.nav.langLabel}
   langSwitchAria={t.nav.langSwitchAria}
   skipLabel={t.nav.skipToContent}
