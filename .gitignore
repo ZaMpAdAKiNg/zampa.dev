@@ -19,3 +19,5 @@ npm-debug.log*
 # harness state
 .overclock-app/
 .remember/
+.vercel
+qa-report*.md
