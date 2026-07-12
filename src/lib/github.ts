@@ -69,7 +69,7 @@ async function fetchJson(url: string, signal: AbortSignal): Promise<any> {
     'User-Agent': 'zampa.dev-build',
     'X-GitHub-Api-Version': '2022-11-28',
   };
-  const token = import.meta.env.GITHUB_TOKEN ?? process.env.GITHUB_TOKEN;
+  const token = import.meta.env?.GITHUB_TOKEN ?? process.env.GITHUB_TOKEN;
   if (token) headers.Authorization = `Bearer ${token}`;
 
   const res = await fetch(url, { signal, headers });

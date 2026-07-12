@@ -15,3 +15,7 @@ node_modules/
 .DS_Store
 *.log
 npm-debug.log*
+
+# harness state
+.overclock-app/
+.remember/
