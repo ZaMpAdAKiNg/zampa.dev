@@ -1,0 +1,12 @@
+---
+import VariantB from '../../components/VariantB.astro';
+import { useContent } from '../../lib/i18n';
+import { getGithubData } from '../../lib/github';
+
+export const prerender = false; // REQUIRED — activates ISR freshness for the GitHub signal (24h). Keep it.
+
+const { lang, t } = useContent(Astro);
+const githubData = await getGithubData();
+---
+
+<VariantB t={t} github={githubData} lang={lang} />
