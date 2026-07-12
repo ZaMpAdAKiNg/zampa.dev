@@ -53,9 +53,9 @@ function fallback(): GithubData {
     profileUrl: `https://github.com/${HANDLE}`,
     createdAt: FALLBACK_CREATED_AT,
     accountAgeYears: yearsSince(FALLBACK_CREATED_AT),
-    publicRepos: 7,
+    publicRepos: 8,
     followers: 4,
-    recentEventCount: 32,
+    recentEventCount: 36,
     lastActiveAt: '2026-07-09T04:46:10Z',
     source: 'fallback',
     degraded: true,
@@ -95,7 +95,7 @@ async function load(): Promise<GithubData> {
       profileUrl: user?.html_url ?? `https://github.com/${HANDLE}`,
       createdAt,
       accountAgeYears: yearsSince(createdAt),
-      publicRepos: typeof user?.public_repos === 'number' ? user.public_repos : 7,
+      publicRepos: typeof user?.public_repos === 'number' ? user.public_repos : 8,
       followers: typeof user?.followers === 'number' ? user.followers : 4,
       recentEventCount: evs.length,
       lastActiveAt: evs[0]?.created_at ?? null,
@@ -113,7 +113,9 @@ async function load(): Promise<GithubData> {
 let cached: Promise<GithubData> | null = null;
 
 /**
- * Memoized build-time GitHub signal. Call once per page in the frontmatter:
+ * Memoized server-side GitHub signal (build-time for static pages, or ISR
+ * on-demand for pages that set `prerender = false`). Call once per page in the
+ * frontmatter:
  *   const githubData = await getGithubData();
  * then pass `githubData` down via props. Do NOT refetch in child components.
  */
