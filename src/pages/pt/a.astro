@@ -1,0 +1,14 @@
+---
+// /pt/a (PT) — Variant A "The Quarterly". Astro.currentLocale === 'pt' here, so
+// useContent() returns the PT copy automatically. Same GitHub signal (memoized).
+import VariantA from '../../components/VariantA.astro';
+import { useContent } from '../../lib/i18n';
+import { getGithubData } from '../../lib/github';
+
+export const prerender = false; // REQUIRED — activates ISR freshness for the GitHub signal (24h). Keep it.
+
+const { lang, t } = useContent(Astro);
+const githubData = await getGithubData();
+---
+
+<VariantA t={t} github={githubData} lang={lang} />

@@ -1,0 +1,881 @@
+---
+// =============================================================================
+// VariantA — "The Quarterly" · editorial / literary front page (route /a, /pt/a)
+// -----------------------------------------------------------------------------
+// Language-AGNOSTIC: renders whatever { t, github, lang } it is handed. All copy
+// comes from the content contract (src/data/content.ts) — no hardcoded strings.
+// Decorative furniture (folio numerals №, section marks §, arrows, "Vol.") is
+// symbolic, not language-bound. Owns its own full document + look; shares nothing
+// with the neutral BaseLayout. Media is CSS / typography / inline SVG only.
+// =============================================================================
+import type { SiteContent, Lang } from '../data/content';
+import type { GithubData } from '../lib/github';
+import { switchLangHref, localizeHref, otherLang } from '../lib/i18n';
+
+interface Props {
+  t: SiteContent;
+  github: GithubData;
+  lang: Lang;
+}
+
+const { t, github, lang } = Astro.props;
+const currentPath = Astro.url.pathname;
+const altHref = switchLangHref(currentPath, lang);
+const nowHref = localizeHref('/now', lang);
+const homeHref = localizeHref('/a', lang);
+const navLabel = lang === 'pt' ? 'Navegação' : 'Navigation';
+
+const stats = [
+  { num: github.accountAgeYears, lab: t.authority.yearsLabel },
+  { num: github.publicRepos, lab: t.authority.reposLabel },
+  { num: github.recentEventCount, lab: t.authority.activeLabel },
+];
+
+const favicon =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f4efe2'/%3E%3Ctext x='16' y='24' font-family='Georgia,serif' font-size='22' font-weight='700' text-anchor='middle' fill='%23b23a24'%3EZ%3C/text%3E%3C/svg%3E";
+---
+
+<!doctype html>
+<html lang={lang} class="va-html">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" href={favicon} />
+    <meta property="og:title" content={t.meta.ogTitle} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body class="va">
+    <a class="va-skip" href="#va-main">{t.nav.skipToContent}</a>
+    <div class="va-progress" aria-hidden="true"></div>
+
+    <header class="va-masthead">
+      <div class="va-masthead-in">
+        <a class="va-brand" href={homeHref} aria-label="zampa.dev">
+          <span class="va-brand-word">Zampa<i>.</i></span>
+          <span class="va-brand-motto">{t.hero.motto}</span>
+        </a>
+        <nav class="va-nav" aria-label={navLabel}>
+          <a class="va-nav-link va-nav-hide" href="#work">{t.nav.work}</a>
+          <a class="va-nav-link va-nav-hide" href="#method">{t.nav.method}</a>
+          <a class="va-nav-link va-nav-hide" href={nowHref}>{t.nav.now}</a>
+          <a class="va-nav-link va-nav-hide" href="#contact">{t.nav.contact}</a>
+          <a class="va-lang" href={altHref} lang={otherLang(lang)} aria-label={t.nav.langSwitchAria}>{t.nav.langLabel}</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="va-main">
+      <!-- HERO -->
+      <section class="va-hero" aria-labelledby="va-h1">
+        <div class="va-wrap">
+          <p class="va-dateline va-rise" style="--d:0">
+            <span class="folio">№ 01</span>
+            <span class="bar" aria-hidden="true"></span>
+            <span>{t.hero.eyebrow}</span>
+          </p>
+          <h1 class="va-headline" id="va-h1">
+            {
+              t.hero.headline.map((line, i) => (
+                <span class:list={[i === 0 ? 'l1' : 'l2', 'va-rise']} style={`--d:${i + 1}`}>
+                  {line}
+                </span>
+              ))
+            }
+          </h1>
+          <div class="va-hero-body">
+            <p class="va-support va-rise" style="--d:3">{t.hero.support}</p>
+            <div class="va-cta va-rise" style="--d:4">
+              <a class="va-btn" href={localizeHref(t.hero.ctaPrimary.href, lang)}>
+                {t.hero.ctaPrimary.label} <span class="arw" aria-hidden="true">→</span>
+              </a>
+              <a class="va-link" href={localizeHref(t.hero.ctaSecondary.href, lang)}>
+                {t.hero.ctaSecondary.label} <span class="arw" aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AUTHORITY -->
+      <section class="va-dept" id="signal" aria-labelledby="h-signal">
+        <div class="va-wrap">
+          <div class="va-dept-head va-reveal">
+            <span class="va-dept-no">№ 02</span>
+            <h2 class="va-dept-title" id="h-signal">{t.authority.heading}</h2>
+          </div>
+          <div class="va-dept-inset">
+            <p class="va-statement va-reveal">{t.authority.trackRecordLine}</p>
+            <div class="va-colophon va-reveal">
+              {
+                stats.map((s) => (
+                  <div class="va-stat">
+                    <div class="num">{s.num}</div>
+                    <div class="lab">{s.lab}</div>
+                  </div>
+                ))
+              }
+            </div>
+            <p class="va-note va-reveal">{t.authority.note}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORK -->
+      <section class="va-dept" id="work" aria-labelledby="h-work">
+        <div class="va-wrap">
+          <div class="va-dept-head va-reveal">
+            <span class="va-dept-no">№ 03</span>
+            <h2 class="va-dept-title" id="h-work">{t.work.heading}</h2>
+          </div>
+          <div class="va-dept-inset">
+            <p class="va-intro va-reveal">{t.work.intro}</p>
+            <div class="va-projects">
+              {
+                t.work.projects.map((p, i) => (
+                  <a class="va-project va-reveal" href={p.url} target="_blank" rel="noopener">
+                    <div class="va-project-top">
+                      <span class="va-project-idx">{String(i + 1).padStart(2, '0')}</span>
+                      <h3 class="va-project-name">
+                        {p.name} <span class="arw" aria-hidden="true">↗</span>
+                      </h3>
+                      <span class="va-project-status">{p.status}</span>
+                    </div>
+                    <p class="va-project-tagline">{p.tagline}</p>
+                    <p class="va-project-desc">{p.description}</p>
+                    <ul class="va-tags">
+                      {p.tags.map((tag) => (
+                        <li>{tag}</li>
+                      ))}
+                    </ul>
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- METHOD -->
+      <section class="va-dept" id="method" aria-labelledby="h-method">
+        <div class="va-wrap">
+          <div class="va-dept-head va-reveal">
+            <span class="va-dept-no">№ 04</span>
+            <h2 class="va-dept-title" id="h-method">{t.method.heading}</h2>
+          </div>
+          <div class="va-dept-inset">
+            <div class="va-prose va-reveal">
+              {
+                t.method.body.map((para, i) => (
+                  <p class:list={[i === 0 && 'va-dropcap']}>{para}</p>
+                ))
+              }
+            </div>
+            <ol class="va-points va-reveal">
+              {t.method.points.map((pt) => <li>{pt}</li>)}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- OSS -->
+      <section class="va-dept" id="oss" aria-labelledby="h-oss">
+        <div class="va-wrap">
+          <div class="va-dept-head va-reveal">
+            <span class="va-dept-no">№ 05</span>
+            <h2 class="va-dept-title" id="h-oss">{t.oss.heading}</h2>
+          </div>
+          <div class="va-dept-inset">
+            <p class="va-intro va-reveal">{t.oss.intro}</p>
+            <div class="va-oss">
+              {
+                t.oss.items.map((item) => (
+                  <a class="va-oss-item va-reveal" href={item.url} target="_blank" rel="noopener">
+                    <span class="va-oss-name">
+                      {item.name} <span class="arw" aria-hidden="true">↗</span>
+                    </span>
+                    <p class="va-oss-desc">{item.description}</p>
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BIO -->
+      <section class="va-dept va-bio" id="bio" aria-labelledby="h-bio">
+        <div class="va-wrap">
+          <div class="va-dept-head va-reveal">
+            <span class="va-dept-no">№ 06</span>
+            <h2 class="va-dept-title" id="h-bio">{t.bio.heading}</h2>
+          </div>
+          <div class="va-dept-inset">
+            <div class="va-prose va-reveal">
+              {
+                t.bio.body.map((para, i) => (
+                  <p class:list={[i === 0 && 'va-dropcap']}>{para}</p>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="va-dept" id="contact" aria-labelledby="h-contact">
+        <div class="va-wrap">
+          <div class="va-dept-head va-reveal">
+            <span class="va-dept-no">№ 07</span>
+            <h2 class="va-dept-title" id="h-contact">{t.contact.heading}</h2>
+          </div>
+          <div class="va-dept-inset">
+            <p class="va-contact-text va-reveal">{t.contact.text}</p>
+            <div class="va-contacts">
+              {
+                t.contact.links.map((link) => (
+                  <a class="va-contact-row va-reveal" href={link.href} target="_blank" rel="noopener">
+                    <span class="va-contact-label">{link.label}</span>
+                    <span class="va-contact-handle">
+                      {link.handle ?? link.label} <span class="arw" aria-hidden="true">↗</span>
+                    </span>
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="va-foot">
+      <div class="va-wrap">
+        <div class="va-foot-top">
+          <p class="va-foot-tagline">{t.footer.tagline}</p>
+          <div class="va-foot-links">
+            <a href={nowHref}>{t.nav.now}</a>
+            <a href={altHref} lang={otherLang(lang)} aria-label={t.nav.langSwitchAria}>{t.nav.langLabel}</a>
+          </div>
+        </div>
+        <p class="va-foot-rights">
+          <span>{t.footer.rights}</span>
+          <span>zampa.dev · Vol. I</span>
+        </p>
+      </div>
+    </footer>
+
+    <style is:global>
+      /* =====================================================================
+         VARIANT A — "The Quarterly" · editorial / literary front page
+         Standalone document. Every rule namespaced under .va (no scoping needed;
+         is:global emits verbatim, which is exactly what a full-page variant wants).
+         ===================================================================== */
+      .va {
+        --paper:   #f4efe2;
+        --paper-2: #ece5d4;
+        --panel:   #faf6ec;
+        --ink:     #211a12;
+        --ink-2:   #3a3025;
+        --muted:   #6c5f4b;
+        --faint:   #a2937b;
+        --rule:    #ddd2ba;
+        --rule-2:  #cabca0;
+        --accent:  #b23a24;
+        --accent-2:#8c2b18;
+        --accent-wash:#b23a2412;
+
+        --font-display: 'Hoefler Text', 'Iowan Old Style', 'Apple Garamond', 'Palatino Linotype', Palatino, 'Times New Roman', Georgia, serif;
+        --font-body: Charter, 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
+        --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+
+        --measure: 42rem;
+        --wrap: 70rem;
+        --rail: 6.5rem;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .va {
+          --paper:   #14110b;
+          --paper-2: #1b1710;
+          --panel:   #1d1810;
+          --ink:     #ece2d0;
+          --ink-2:   #cfc4ad;
+          --muted:   #a99b83;
+          --faint:   #736753;
+          --rule:    #2a2318;
+          --rule-2:  #3b3122;
+          --accent:  #e06b4d;
+          --accent-2:#ec8b70;
+          --accent-wash:#e06b4d18;
+        }
+      }
+
+      .va *, .va *::before, .va *::after { box-sizing: border-box; }
+
+      html.va-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+      @media (prefers-reduced-motion: reduce) { html.va-html { scroll-behavior: auto; } }
+
+      .va {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 17px;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        font-kerning: normal;
+        font-feature-settings: 'kern' 1, 'liga' 1;
+        overflow-x: hidden;
+      }
+
+      .va::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.5;
+        background-image:
+          radial-gradient(circle at 18% 12%, var(--accent-wash), transparent 42%),
+          radial-gradient(circle at 88% 78%, var(--accent-wash), transparent 46%);
+      }
+
+      .va :where(a) { color: inherit; }
+      .va :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+
+      .va-skip {
+        position: absolute;
+        left: -999px; top: 0;
+        z-index: 60;
+        background: var(--accent);
+        color: #fff;
+        padding: 0.6rem 1rem;
+        font: 600 0.78rem/1 var(--font-mono);
+        letter-spacing: 0.04em;
+        text-decoration: none;
+      }
+      .va-skip:focus { left: 0; }
+
+      .va-progress {
+        position: fixed;
+        top: 0; left: 0;
+        height: 2px; width: 100%;
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+        background: var(--accent);
+        z-index: 55;
+      }
+
+      .va-wrap {
+        position: relative;
+        z-index: 1;
+        max-width: var(--wrap);
+        margin: 0 auto;
+        padding: 0 clamp(1.25rem, 4.5vw, 3.25rem);
+      }
+
+      /* ---------- Masthead ---------- */
+      .va-masthead {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: color-mix(in srgb, var(--paper) 88%, transparent);
+        -webkit-backdrop-filter: blur(10px) saturate(1.2);
+        backdrop-filter: blur(10px) saturate(1.2);
+        border-bottom: 1px solid var(--rule);
+      }
+      .va-masthead-in {
+        max-width: var(--wrap);
+        margin: 0 auto;
+        padding: 0.85rem clamp(1.25rem, 4.5vw, 3.25rem);
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1.5rem;
+      }
+      .va-brand { text-decoration: none; display: inline-flex; align-items: baseline; gap: 0.55rem; }
+      .va-brand-word {
+        font-family: var(--font-display);
+        font-size: 1.32rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .va-brand-word i { font-style: normal; color: var(--accent); }
+      .va-brand-motto {
+        font: 500 0.62rem/1 var(--font-mono);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--faint);
+        white-space: nowrap;
+      }
+      .va-nav { display: flex; align-items: baseline; gap: clamp(0.9rem, 2vw, 1.7rem); }
+      .va-nav a {
+        text-decoration: none;
+        font: 500 0.72rem/1 var(--font-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        position: relative;
+        transition: color 0.18s ease;
+      }
+      .va-nav-link::after {
+        content: '';
+        position: absolute;
+        left: 0; bottom: -0.35rem;
+        width: 100%; height: 1px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+        transition: transform 0.22s cubic-bezier(0.4,0,0.1,1);
+      }
+      .va-nav a:hover { color: var(--ink); }
+      .va-nav-link:hover::after { transform: scaleX(1); }
+      .va-lang {
+        padding: 0.3rem 0.55rem;
+        border: 1px solid var(--rule-2);
+        border-radius: 3px;
+      }
+      .va-lang:hover { border-color: var(--accent); color: var(--ink) !important; }
+      @media (max-width: 720px) {
+        .va-nav-hide { display: none; }
+        .va-brand-motto { display: none; }
+      }
+
+      /* ---------- Hero ---------- */
+      .va-hero {
+        padding: clamp(3.5rem, 10vw, 7rem) 0 clamp(3rem, 7vw, 5.5rem);
+        border-bottom: 1px solid var(--rule);
+        position: relative;
+      }
+      .va-dateline {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        margin: 0 0 clamp(1.75rem, 4vw, 2.75rem);
+        font: 500 0.72rem/1 var(--font-mono);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .va-dateline .folio { color: var(--accent); }
+      .va-dateline .bar { flex: 1; height: 1px; background: var(--rule); max-width: 6rem; }
+      .va-headline {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(2.75rem, 8.5vw, 5.6rem);
+        line-height: 0.98;
+        letter-spacing: -0.02em;
+        text-wrap: balance;
+      }
+      .va-headline .l1 { display: block; }
+      .va-headline .l2 { display: block; font-style: italic; color: var(--accent); }
+      .va-hero-body {
+        margin: clamp(1.75rem, 4vw, 2.5rem) 0 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem clamp(2rem, 6vw, 4rem);
+        align-items: end;
+      }
+      @media (min-width: 820px) {
+        .va-hero-body { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+      }
+      .va-support {
+        margin: 0;
+        max-width: 34rem;
+        font-size: clamp(1.12rem, 2.2vw, 1.32rem);
+        line-height: 1.55;
+        color: var(--ink-2);
+      }
+      .va-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 1.1rem 1.5rem; justify-self: start; }
+      @media (min-width: 820px) { .va-cta { justify-self: end; flex-direction: column; align-items: flex-end; } }
+      .va-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        text-decoration: none;
+        font: 600 0.82rem/1 var(--font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.85rem 1.35rem;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 3px;
+        transition: transform 0.18s ease, background 0.18s ease;
+      }
+      .va-btn .arw { transition: transform 0.22s ease; }
+      .va-btn:hover { background: var(--accent); transform: translateY(-2px); }
+      .va-btn:hover .arw { transform: translateX(4px); }
+      .va-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        font: 500 0.82rem/1 var(--font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding-bottom: 0.25rem;
+        border-bottom: 1px solid var(--rule-2);
+        transition: color 0.18s ease, border-color 0.18s ease;
+      }
+      .va-link:hover { color: var(--ink); border-color: var(--accent); }
+      .va-link .arw { transition: transform 0.22s ease; }
+      .va-link:hover .arw { transform: translate(3px, -3px); }
+
+      /* ---------- Department scaffold ---------- */
+      .va-dept { padding: clamp(3.5rem, 8vw, 6rem) 0; border-bottom: 1px solid var(--rule); }
+      .va-dept-head {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        margin: 0 0 clamp(2rem, 4vw, 3rem);
+      }
+      .va-dept-no {
+        font: 500 0.72rem/1 var(--font-mono);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--accent);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .va-dept-no::after { content: ''; flex: 1; height: 1px; background: var(--rule); max-width: 5rem; }
+      .va-dept-title {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(1.7rem, 4vw, 2.6rem);
+        line-height: 1.05;
+        letter-spacing: -0.015em;
+      }
+      @media (min-width: 900px) {
+        .va-dept-head {
+          grid-template-columns: var(--rail) 1fr;
+          align-items: baseline;
+          gap: 0 2rem;
+        }
+        .va-dept-no { flex-direction: column; align-items: flex-start; gap: 0.6rem; padding-top: 0.6rem; }
+        .va-dept-no::after { width: 100%; max-width: none; }
+        .va-dept-inset { margin-left: calc(var(--rail) + 2rem); }
+      }
+
+      .va-intro {
+        margin: 0 0 2.5rem;
+        max-width: 36rem;
+        font-size: 1.22rem;
+        line-height: 1.55;
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      /* ---------- Authority ---------- */
+      .va-statement {
+        margin: 0 0 2.5rem;
+        max-width: 40rem;
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(1.5rem, 3.4vw, 2.15rem);
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        position: relative;
+        padding-left: 1.5rem;
+      }
+      .va-statement::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0.35em; bottom: 0.15em;
+        width: 3px;
+        background: var(--accent);
+      }
+      .va-colophon {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border: 1px solid var(--rule-2);
+        border-radius: 4px;
+        overflow: hidden;
+        max-width: 40rem;
+      }
+      .va-stat { padding: 1.25rem 1.35rem; border-right: 1px solid var(--rule); }
+      .va-stat:last-child { border-right: none; }
+      .va-stat .num {
+        font-family: var(--font-display);
+        font-size: clamp(1.9rem, 4vw, 2.6rem);
+        font-weight: 500;
+        line-height: 1;
+        font-variant-numeric: tabular-nums lining-nums;
+        letter-spacing: -0.01em;
+      }
+      .va-stat .lab {
+        margin-top: 0.55rem;
+        font: 500 0.66rem/1.3 var(--font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--faint);
+      }
+      @media (max-width: 560px) {
+        .va-colophon { grid-template-columns: 1fr; }
+        .va-stat { border-right: none; border-bottom: 1px solid var(--rule); }
+        .va-stat:last-child { border-bottom: none; }
+      }
+      .va-note {
+        margin: 1.5rem 0 0;
+        max-width: 40rem;
+        font: 400 0.82rem/1.6 var(--font-mono);
+        color: var(--faint);
+      }
+
+      /* ---------- Work ---------- */
+      .va-projects { display: grid; gap: 0; max-width: 46rem; }
+      .va-project {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        padding: clamp(1.75rem, 3.5vw, 2.5rem) 0;
+        border-top: 1px solid var(--rule);
+        position: relative;
+      }
+      .va-project:first-child { border-top: none; padding-top: 0; }
+      .va-project-top { display: flex; align-items: baseline; gap: 1rem; }
+      .va-project-idx {
+        font: 500 0.78rem/1 var(--font-mono);
+        color: var(--faint);
+        letter-spacing: 0.05em;
+      }
+      .va-project-name {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(1.65rem, 3.6vw, 2.35rem);
+        line-height: 1;
+        letter-spacing: -0.015em;
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0.6rem;
+        transition: color 0.24s ease;
+      }
+      .va-project-name .arw {
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+        color: var(--faint);
+        transform: translateY(-0.15em);
+        transition: transform 0.24s ease, color 0.24s ease;
+      }
+      .va-project:hover .va-project-name { color: var(--accent); }
+      .va-project:hover .va-project-name .arw { transform: translate(4px, -0.35em); color: var(--accent); }
+      .va-project-status {
+        margin-left: auto;
+        font: 500 0.66rem/1 var(--font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+        border: 1px solid var(--rule-2);
+        border-radius: 100px;
+        padding: 0.4rem 0.7rem;
+      }
+      .va-project-tagline {
+        margin: 1rem 0 0.75rem;
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: 1.28rem;
+        line-height: 1.35;
+        color: var(--ink-2);
+        max-width: 34rem;
+      }
+      .va-project-desc { margin: 0; max-width: 38rem; color: var(--muted); }
+      .va-tags { margin: 1.1rem 0 0; display: flex; flex-wrap: wrap; gap: 0.45rem; list-style: none; padding: 0; }
+      .va-tags li {
+        font: 500 0.66rem/1 var(--font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--faint);
+        padding: 0.38rem 0.6rem;
+        background: var(--accent-wash);
+        border-radius: 3px;
+      }
+      @media (max-width: 560px) {
+        .va-project-status { margin-left: 0; order: 3; }
+        .va-project-top { flex-wrap: wrap; }
+      }
+
+      /* ---------- Method ---------- */
+      .va-prose { max-width: var(--measure); }
+      .va-prose p { margin: 0 0 1.25rem; font-size: 1.12rem; line-height: 1.7; }
+      .va-prose p:last-child { margin-bottom: 0; }
+      .va-dropcap::first-letter {
+        float: left;
+        font-family: var(--font-display);
+        font-size: 3.6em;
+        line-height: 0.72;
+        font-weight: 500;
+        padding: 0.08em 0.12em 0 0;
+        color: var(--accent);
+      }
+      .va-points { margin: 2.5rem 0 0; padding: 0; list-style: none; max-width: var(--measure); counter-reset: pt; }
+      .va-points li {
+        counter-increment: pt;
+        display: grid;
+        grid-template-columns: 2.75rem 1fr;
+        gap: 0 1rem;
+        align-items: baseline;
+        padding: 1.05rem 0;
+        border-top: 1px solid var(--rule);
+        font-size: 1.06rem;
+      }
+      .va-points li::before {
+        content: counter(pt, decimal-leading-zero);
+        font: 500 0.8rem/1 var(--font-mono);
+        color: var(--accent);
+        letter-spacing: 0.04em;
+      }
+
+      /* ---------- OSS ---------- */
+      .va-oss { display: grid; gap: 0; max-width: 46rem; }
+      .va-oss-item {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+        text-decoration: none;
+        color: inherit;
+        padding: 1.4rem 0;
+        border-top: 1px solid var(--rule);
+      }
+      .va-oss-item:first-child { border-top: none; padding-top: 0; }
+      .va-oss-name {
+        font-family: var(--font-mono);
+        font-size: 0.98rem;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.18s ease;
+      }
+      .va-oss-name .arw { color: var(--faint); transition: transform 0.22s ease, color 0.22s ease; }
+      .va-oss-item:hover .va-oss-name { color: var(--accent); }
+      .va-oss-item:hover .va-oss-name .arw { transform: translate(3px, -3px); color: var(--accent); }
+      .va-oss-desc { margin: 0; color: var(--muted); max-width: 40rem; }
+      @media (min-width: 720px) {
+        .va-oss-item { grid-template-columns: 15rem 1fr; gap: 0 2rem; align-items: baseline; }
+      }
+
+      /* ---------- Bio ---------- */
+      .va-bio { background: var(--panel); border-block: 1px solid var(--rule); }
+      .va-bio .va-prose p { font-family: var(--font-display); font-size: 1.2rem; line-height: 1.62; color: var(--ink-2); }
+
+      /* ---------- Contact ---------- */
+      .va-contact-text { margin: 0 0 2.25rem; max-width: 34rem; font-size: 1.22rem; line-height: 1.55; color: var(--muted); }
+      .va-contacts { display: grid; gap: 0; max-width: 40rem; }
+      .va-contact-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        text-decoration: none;
+        color: inherit;
+        padding: 1.2rem 0;
+        border-top: 1px solid var(--rule);
+      }
+      .va-contact-row:first-child { border-top: none; }
+      .va-contact-label {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 500;
+        transition: color 0.18s ease;
+      }
+      .va-contact-row:hover .va-contact-label { color: var(--accent); }
+      .va-contact-handle {
+        font: 500 0.82rem/1 var(--font-mono);
+        color: var(--muted);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .va-contact-handle .arw { color: var(--faint); transition: transform 0.22s ease; }
+      .va-contact-row:hover .va-contact-handle .arw { transform: translate(3px, -3px); color: var(--accent); }
+
+      /* ---------- Footer ---------- */
+      .va-foot { padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(3rem, 6vw, 4.5rem); }
+      .va-foot-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1rem 2rem; }
+      .va-foot-tagline {
+        margin: 0;
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: clamp(1.35rem, 3vw, 1.9rem);
+        font-weight: 500;
+        max-width: 26rem;
+      }
+      .va-foot-links { display: flex; gap: 1.25rem; }
+      .va-foot-links a { text-decoration: none; font: 500 0.74rem/1 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); transition: color 0.18s ease; }
+      .va-foot-links a:hover { color: var(--accent); }
+      .va-foot-rights {
+        margin: 2.5rem 0 0;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--rule);
+        font: 400 0.78rem/1 var(--font-mono);
+        color: var(--faint);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem 1rem;
+        justify-content: space-between;
+      }
+
+      /* ---------- Reveal (default VISIBLE; JS opts into hiding) ---------- */
+      html[data-va-motion] .va-reveal {
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity 0.7s cubic-bezier(0.22,0.61,0.36,1), transform 0.7s cubic-bezier(0.22,0.61,0.36,1);
+      }
+      html[data-va-motion] .va-reveal.in { opacity: 1; transform: none; }
+
+      /* ---------- Load stagger (pure CSS; safe without JS) ---------- */
+      @media (prefers-reduced-motion: no-preference) {
+        .va-rise { animation: va-rise 0.8s cubic-bezier(0.22,0.61,0.36,1) both; animation-delay: calc(var(--d, 0) * 90ms); }
+        @keyframes va-rise { from { opacity: 0; transform: translateY(16px); } }
+      }
+    </style>
+
+    <script>
+      const root = document.documentElement;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Scroll progress rule
+      const bar = document.querySelector<HTMLElement>('.va-progress');
+      if (bar) {
+        let ticking = false;
+        const update = () => {
+          const h = document.documentElement.scrollHeight - window.innerHeight;
+          const p = h > 0 ? Math.min(1, window.scrollY / h) : 0;
+          bar.style.transform = `scaleX(${p})`;
+          ticking = false;
+        };
+        window.addEventListener('scroll', () => {
+          if (!ticking) { ticking = true; requestAnimationFrame(update); }
+        }, { passive: true });
+        update();
+      }
+
+      // Scroll reveals — only hide content once JS + IO + motion are confirmed
+      if ('IntersectionObserver' in window && !reduce) {
+        root.setAttribute('data-va-motion', '');
+        const els = document.querySelectorAll('.va-reveal');
+        const io = new IntersectionObserver((entries, obs) => {
+          for (const e of entries) {
+            if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+          }
+        }, { rootMargin: '0px 0px -12% 0px', threshold: 0.1 });
+        els.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>
