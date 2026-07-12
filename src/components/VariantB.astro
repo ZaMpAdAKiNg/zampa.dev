@@ -14,6 +14,7 @@
 import { switchLangHref, localizeHref } from '../lib/i18n';
 import type { SiteContent, Lang } from '../data/content';
 import type { GithubData } from '../lib/github';
+import Seo from './Seo.astro';
 
 interface Props {
   t: SiteContent;
@@ -77,10 +78,13 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d9488'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='20' font-weight='700' text-anchor='middle' fill='%23fafaf9'%3EZ%3C/text%3E%3C/svg%3E"
     />
-    <meta property="og:title" content={t.meta.ogTitle} />
-    <meta property="og:description" content={t.meta.description} />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary" />
+    <Seo
+      lang={lang}
+      title={t.meta.title}
+      description={t.meta.description}
+      ogTitle={t.meta.ogTitle}
+      pathname={pathname}
+    />
   </head>
   <body>
     <a class="skip" href="#main">{t.nav.skipToContent}</a>
@@ -165,7 +169,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
 
       <!-- ===================== AUTHORITY (01) ===================== -->
       <section class="band" id="signal" aria-labelledby="auth-h">
-        <div class="sec-index reveal"><span class="mono">01</span><span class="rule"></span><span class="mono tag">signal</span></div>
+        <div class="sec-index reveal"><span class="mono">01</span><span class="rule"></span><span class="mono tag">{t.sections.signal}</span></div>
         <div class="auth">
           <h2 id="auth-h" class="sec-h reveal">{t.authority.heading}</h2>
           <p class="auth-lead reveal" style="--d:.08s">{t.authority.trackRecordLine}</p>
@@ -190,7 +194,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
 
       <!-- ===================== WORK (02) ===================== -->
       <section class="band" id="work" aria-labelledby="work-h">
-        <div class="sec-index reveal"><span class="mono">02</span><span class="rule"></span><span class="mono tag">work</span></div>
+        <div class="sec-index reveal"><span class="mono">02</span><span class="rule"></span><span class="mono tag">{t.sections.work}</span></div>
         <h2 id="work-h" class="sec-h reveal">{t.work.heading}</h2>
         <p class="sec-intro reveal" style="--d:.06s">{t.work.intro}</p>
         <div class="work-list">
@@ -225,7 +229,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
 
       <!-- ===================== METHOD (03) ===================== -->
       <section class="band" id="method" aria-labelledby="method-h">
-        <div class="sec-index reveal"><span class="mono">03</span><span class="rule"></span><span class="mono tag">method</span></div>
+        <div class="sec-index reveal"><span class="mono">03</span><span class="rule"></span><span class="mono tag">{t.sections.method}</span></div>
         <div class="method">
           <div class="method-copy">
             <h2 id="method-h" class="sec-h reveal">{t.method.heading}</h2>
@@ -246,7 +250,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
 
       <!-- ===================== OSS (04) ===================== -->
       <section class="band" id="oss" aria-labelledby="oss-h">
-        <div class="sec-index reveal"><span class="mono">04</span><span class="rule"></span><span class="mono tag">open source</span></div>
+        <div class="sec-index reveal"><span class="mono">04</span><span class="rule"></span><span class="mono tag">{t.sections.oss}</span></div>
         <h2 id="oss-h" class="sec-h reveal">{t.oss.heading}</h2>
         <p class="sec-intro reveal" style="--d:.06s">{t.oss.intro}</p>
         <ul class="oss-list">
@@ -268,7 +272,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
 
       <!-- ===================== BIO (05) ===================== -->
       <section class="band" id="bio" aria-labelledby="bio-h">
-        <div class="sec-index reveal"><span class="mono">05</span><span class="rule"></span><span class="mono tag">before the agents</span></div>
+        <div class="sec-index reveal"><span class="mono">05</span><span class="rule"></span><span class="mono tag">{t.sections.bio}</span></div>
         <div class="bio">
           <h2 id="bio-h" class="sec-h reveal">{t.bio.heading}</h2>
           <div class="bio-body">
@@ -279,7 +283,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
 
       <!-- ===================== CONTACT (06) ===================== -->
       <section class="band contact" id="contact" aria-labelledby="contact-h">
-        <div class="sec-index reveal"><span class="mono">06</span><span class="rule"></span><span class="mono tag">contact</span></div>
+        <div class="sec-index reveal"><span class="mono">06</span><span class="rule"></span><span class="mono tag">{t.sections.contact}</span></div>
         <h2 id="contact-h" class="sec-h reveal">{t.contact.heading}</h2>
         <p class="sec-intro reveal" style="--d:.06s">{t.contact.text}</p>
         <ul class="contact-list">
@@ -321,7 +325,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
         --fg: #0c0c10;
         --fg-dim: #34343c;
         --muted: #5f5f68;
-        --faint: #90909a;
+        --faint: #6a6a74; /* WCAG AA ≥4.5:1 on paper bg — GitHub signal must be crisp */
         --line: #e4e4dc;
         --line-strong: #d0d0c6;
         --accent: #0a746a;
@@ -347,7 +351,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
           --fg: #f1f1f4;
           --fg-dim: #c6c6ce;
           --muted: #8a8a95;
-          --faint: #56565f;
+          --faint: #7c7c84; /* WCAG AA ≥4.5:1 on dark bg/elev — GitHub signal must be crisp */
           --line: #1b1b21;
           --line-strong: #2b2b34;
           --accent: #2dd4bf;
@@ -797,7 +801,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
         line-height: 1;
       }
       .stat-lbl {
-        font-size: 0.62rem;
+        font-size: 0.7rem;
         line-height: 1.25;
         letter-spacing: 0.04em;
         text-transform: uppercase;
@@ -1242,14 +1246,18 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
          Scroll reveal + motion. Default = hidden→revealed; reduced-motion and
          no-JS fall back to fully visible (see the .no-js / media guard).
       --------------------------------------------------------------------- */
-      .reveal {
+      /* Default = fully VISIBLE. The hiding rule is gated behind [data-va-motion],
+         which JS sets ONLY after confirming IntersectionObserver + no reduced
+         motion. So without JS (or with reduced motion) the page renders complete —
+         no blank screen. JS merely ADDS the scroll-in motion. */
+      html[data-va-motion] .reveal {
         opacity: 0;
         transform: translateY(18px);
         transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         transition-delay: var(--d, 0s);
         will-change: opacity, transform;
       }
-      .reveal.is-visible {
+      html[data-va-motion] .reveal.is-visible {
         opacity: 1;
         transform: none;
       }
@@ -1317,6 +1325,9 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
       if (reduce || !('IntersectionObserver' in window)) {
         reveals.forEach((el) => el.classList.add('is-visible'));
       } else {
+        // Only NOW do we opt into hiding-then-revealing — content was visible
+        // by default, so no-JS / no-IO users always saw the full page.
+        document.documentElement.setAttribute('data-va-motion', '');
         const io = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
