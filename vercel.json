@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "x.zampa.dev" }],
+      "destination": "https://x.com/ZaMpAdAKiNg",
+      "permanent": true
+    }
+  ]
+}
