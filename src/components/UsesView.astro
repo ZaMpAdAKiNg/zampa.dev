@@ -1,0 +1,180 @@
+---
+// /uses — FOUNDATION-OWNED, shared, neutral (same pattern as NowView): the
+// locale pages are thin wrappers, this view resolves lang + content and renders
+// inside BaseLayout. Zero client-side JS; styling reuses the base tokens.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useContent, localizeHref } from '../lib/i18n';
+
+const { lang, t } = useContent(Astro);
+const u = t.uses;
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${u.title} — ${t.meta.ogTitle}`}
+  description={u.metaDescription}
+  ogTitle={t.meta.ogTitle}
+  langLabel={t.nav.langLabel}
+  langSwitchAria={t.nav.langSwitchAria}
+  skipLabel={t.nav.skipToContent}
+>
+  <article class="uses">
+    <header class="uses-head">
+      <p class="eyebrow">{u.updatedLabel} — {u.updatedDate}</p>
+      <h1>{u.title}</h1>
+      <p class="lede">{u.intro}</p>
+    </header>
+
+    <div class="sections">
+      {
+        u.sections.map((section, i) => (
+          <section class="sec" aria-labelledby={`uses-${section.id}`}>
+            <div class="sec-head">
+              <span class="sec-index" aria-hidden="true">
+                0{i + 1}
+              </span>
+              <h2 id={`uses-${section.id}`}>{section.heading}</h2>
+            </div>
+            {section.intro && <p class="sec-intro">{section.intro}</p>}
+            <ul class="entries">
+              {section.entries.map((entry) => (
+                <li>
+                  <span class="entry-name">
+                    {entry.url ? (
+                      <a href={entry.url} target="_blank" rel="noopener noreferrer">
+                        {entry.name}
+                      </a>
+                    ) : (
+                      entry.name
+                    )}
+                  </span>
+                  <span class="entry-text">{entry.description}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+
+    <a class="back" href={localizeHref('/', lang)}>&larr; {u.backHome}</a>
+  </article>
+</BaseLayout>
+
+<style>
+  .uses {
+    animation: rise 0.5s ease both;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .uses {
+      animation: none;
+    }
+  }
+
+  .uses-head {
+    margin-bottom: 2.75rem;
+  }
+  .eyebrow {
+    margin: 0 0 1rem;
+    font: 600 0.78rem/1 var(--font-mono);
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  h1 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(2.25rem, 6vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 640;
+  }
+  .lede {
+    margin: 0;
+    max-width: 34rem;
+    font-size: 1.1rem;
+    color: var(--muted);
+  }
+
+  .sections {
+    display: grid;
+    gap: 2.75rem;
+  }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .sec-index {
+    font: 600 0.72rem/1 var(--font-mono);
+    color: var(--accent);
+    letter-spacing: 0.03em;
+  }
+  .sec-head h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 620;
+    letter-spacing: -0.01em;
+  }
+  .sec-intro {
+    margin: 0 0 1.1rem;
+    max-width: 34rem;
+    font-size: 0.92rem;
+    color: var(--faint);
+  }
+
+  .entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .entries li {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+  .entry-name {
+    font: 600 0.8rem/1.4 var(--font-mono);
+    letter-spacing: 0.01em;
+    color: var(--fg);
+  }
+  .entry-name a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .entry-name a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .entry-text {
+    color: var(--muted);
+  }
+
+  .back {
+    display: inline-block;
+    margin-top: 2.5rem;
+    font: 500 0.9rem/1 var(--font-mono);
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 520px) {
+    .entries li {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+</style>

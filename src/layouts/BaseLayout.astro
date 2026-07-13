@@ -4,8 +4,9 @@
 // visual variants, which each own their own layout. No shared styling with the
 // variants; no remote fonts (self-contained, system stacks only).
 import { switchLangHref, localizeHref } from '../lib/i18n';
-import type { Lang } from '../data/content';
+import { content, type Lang } from '../data/content';
 import Seo from '../components/Seo.astro';
+import FooterNav from '../components/FooterNav.astro';
 
 interface Props {
   lang: Lang;
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const { lang, title, description, ogTitle, langLabel, langSwitchAria, skipLabel } = Astro.props;
+const footerC = content[lang].footer;
 const currentPath = Astro.url.pathname;
 const altHref = switchLangHref(currentPath, lang);
 const homeHref = localizeHref('/', lang);
@@ -63,9 +65,8 @@ const isNow = currentPath.replace(/\/$/, '').endsWith('/now') || currentPath.rep
       </main>
 
       <footer class="site-foot">
-        <span>© 2026 ZaMpA</span>
-        <span class="foot-sep" aria-hidden="true">·</span>
-        <a href={homeHref}>zampa.dev</a>
+        <FooterNav lang={lang} links={footerC.nav} ariaLabel={footerC.navAriaLabel} />
+        <span class="foot-rights">{footerC.rights}</span>
       </footer>
     </div>
   </body>
@@ -226,21 +227,13 @@ const isNow = currentPath.replace(/\/$/, '').endsWith('/now') || currentPath.rep
   .site-foot {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.5rem;
     padding: 2rem 0 2.5rem;
     border-top: 1px solid var(--border);
     color: var(--faint);
-    font: 500 0.82rem/1 var(--font-mono);
-  }
-  .site-foot a {
-    color: var(--muted);
-    text-decoration: none;
-  }
-  .site-foot a:hover {
-    color: var(--fg);
-  }
-  .foot-sep {
-    color: var(--border-strong);
+    font: 500 0.82rem/1.4 var(--font-mono);
   }
 
   @media (max-width: 480px) {

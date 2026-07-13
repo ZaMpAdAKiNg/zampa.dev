@@ -15,6 +15,7 @@ import { switchLangHref, localizeHref } from '../lib/i18n';
 import type { SiteContent, Lang } from '../data/content';
 import type { GithubData } from '../lib/github';
 import Seo from './Seo.astro';
+import FooterNav from './FooterNav.astro';
 
 interface Props {
   t: SiteContent;
@@ -306,7 +307,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
       <div class="foot-inner">
         <span class="foot-tag mono">{t.footer.tagline}</span>
         <div class="foot-meta">
-          <a class="mono" href={nowHref}>/now</a>
+          <FooterNav lang={lang} links={t.footer.nav} ariaLabel={t.footer.navAriaLabel} />
           <span class="foot-sep" aria-hidden="true">·</span>
           <span class="mono">{t.footer.rights}</span>
         </div>

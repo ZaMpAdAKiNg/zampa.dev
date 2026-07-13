@@ -1,0 +1,64 @@
+---
+// FooterNav — FOUNDATION-OWNED. The discreet cross-page footer nav row
+// (now · uses · colophon · GitHub · X). Rendered inside BOTH footers —
+// BaseLayout and the homepage variant — so every page carries the same map.
+// Internal hrefs in the content contract are language-agnostic; localized here.
+// Styling leans only on tokens both layouts define (--muted/--faint/--accent),
+// with a var() fallback chain for the mono font name difference.
+import { localizeHref } from '../lib/i18n';
+import type { Lang, CtaLink } from '../data/content';
+
+interface Props {
+  lang: Lang;
+  links: CtaLink[];
+  ariaLabel: string;
+}
+
+const { lang, links, ariaLabel } = Astro.props as Props;
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+---
+
+<nav class="foot-nav" aria-label={ariaLabel}>
+  {
+    links.map((link, i) => (
+      <>
+        {i > 0 && (
+          <span class="fn-sep" aria-hidden="true">
+            ·
+          </span>
+        )}
+        {isExternal(link.href) ? (
+          <a href={link.href} target="_blank" rel="noopener noreferrer">
+            {link.label}
+          </a>
+        ) : (
+          <a href={localizeHref(link.href, lang)}>{link.label}</a>
+        )}
+      </>
+    ))
+  }
+</nav>
+
+<style>
+  .foot-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-mono, var(--mono, ui-monospace, monospace));
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .foot-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .foot-nav a:hover {
+    color: var(--accent);
+  }
+  .fn-sep {
+    color: var(--faint);
+  }
+</style>

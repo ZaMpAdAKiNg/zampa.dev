@@ -59,6 +59,32 @@ export interface NowTier {
   entries: NowEntry[];
 }
 
+export interface UsesEntry {
+  /** Tool or practice name, e.g. "Claude Code". */
+  name: string;
+  /** Optional external link rendered on the name. */
+  url?: string;
+  description: string;
+}
+
+export interface UsesSection {
+  /** Stable id across languages — used for heading anchors. */
+  id: string;
+  heading: string;
+  /** Optional one-line section intro. */
+  intro?: string;
+  entries: UsesEntry[];
+}
+
+export interface ColophonSection {
+  /** Stable id across languages — used for heading anchors. */
+  id: string;
+  heading: string;
+  body: string[];
+  /** Optional reference link rendered after the body. */
+  link?: LinkItem;
+}
+
 export interface SiteContent {
   meta: {
     title: string;
@@ -134,6 +160,11 @@ export interface SiteContent {
   footer: {
     tagline: string;
     rights: string;
+    /** aria-label of the discreet cross-page footer nav. */
+    navAriaLabel: string;
+    /** Footer nav — internal hrefs are language-agnostic paths (localize at
+     *  render with localizeHref); absolute URLs pass through. */
+    nav: CtaLink[];
   };
   now: {
     title: string;
@@ -148,6 +179,24 @@ export interface SiteContent {
     tiers: NowTier[];
     /** Caption explaining the visibility-level mechanic. */
     accessNote: string;
+  };
+  /** /uses — "what I use", in the spirit of uses.tech. */
+  uses: {
+    title: string;
+    metaDescription: string;
+    intro: string;
+    updatedLabel: string;
+    updatedDate: string;
+    backHome: string;
+    sections: UsesSection[];
+  };
+  /** /colophon — how this site was made. */
+  colophon: {
+    title: string;
+    metaDescription: string;
+    intro: string;
+    backHome: string;
+    sections: ColophonSection[];
   };
 }
 
@@ -276,6 +325,14 @@ const en: SiteContent = {
   footer: {
     tagline: 'Built solo, orchestrating agents.',
     rights: '© 2026 ZaMpA · zampa.dev',
+    navAriaLabel: 'Site map',
+    nav: [
+      { label: 'now', href: '/now' },
+      { label: 'uses', href: '/uses' },
+      { label: 'colophon', href: '/colophon' },
+      { label: 'GitHub', href: 'https://github.com/ZaMpAdAKiNg' },
+      { label: 'X', href: 'https://x.com/ZaMpAdAKiNg' },
+    ],
   },
   now: {
     title: 'Now',
@@ -338,6 +395,174 @@ const en: SiteContent = {
             text: 'CTO of a confidential product, under NDA. Details shared on request, under agreement.',
           },
         ],
+      },
+    ],
+  },
+  uses: {
+    title: 'Uses',
+    metaDescription:
+      'What ZaMpA works with — the AI agents, the orchestration setup, and the stack for building and shipping — in the spirit of uses.tech.',
+    intro:
+      "What I actually work with — in the spirit of uses.tech. The interesting part isn't the editor; it's the agents.",
+    updatedLabel: 'Updated',
+    updatedDate: 'July 13, 2026',
+    backHome: 'Back home',
+    sections: [
+      {
+        id: 'agents',
+        heading: 'Agents & orchestration',
+        intro:
+          'The core of the setup. I work solo by directing teams of AI coding agents in parallel — everything else serves this part.',
+        entries: [
+          {
+            name: 'Claude Code',
+            url: 'https://claude.com/claude-code',
+            description:
+              'My primary agent. It plans, writes, refactors, and carries most of the day-to-day work across every project.',
+          },
+          {
+            name: 'Codex CLI',
+            url: 'https://github.com/openai/codex',
+            description:
+              'The second opinion. A different model reviews the same work adversarially — it catches what the first one rationalizes.',
+          },
+          {
+            name: 'Playwright',
+            url: 'https://playwright.dev',
+            description:
+              'Browser QA, driven by agents: real clicks on real pages, with screenshots and console logs as evidence.',
+          },
+          {
+            name: 'MCP servers',
+            url: 'https://modelcontextprotocol.io',
+            description:
+              "The agents' hands — deploys, browser control, and infrastructure exposed as tools they can call directly.",
+          },
+          {
+            name: 'Skills',
+            description:
+              'A library of reusable skills — orchestration discipline, debate protocols, digest pipelines — that any agent can load on demand.',
+          },
+          {
+            name: 'Workspace',
+            description:
+              'A multi-agent workspace that runs several CLI agents side by side — one screen, several workers, one director.',
+          },
+        ],
+      },
+      {
+        id: 'shipping',
+        heading: 'Building & shipping',
+        entries: [
+          {
+            name: 'Astro',
+            url: 'https://astro.build',
+            description:
+              'Static-first sites, this one included. Fast by default, and no client-side JavaScript unless a page earns it.',
+          },
+          {
+            name: 'TypeScript',
+            url: 'https://www.typescriptlang.org',
+            description:
+              'Everywhere. Types are the contract that keeps a fleet of agents honest inside the same codebase.',
+          },
+          {
+            name: 'Vercel',
+            url: 'https://vercel.com',
+            description:
+              'Push to master and production deploys itself. ISR keeps server-rendered signals fresh with no babysitting.',
+          },
+          {
+            name: 'GitHub',
+            url: 'https://github.com/ZaMpAdAKiNg',
+            description:
+              'The public identity. The authority of everything here is commits and time — GitHub is the audit trail.',
+          },
+        ],
+      },
+      {
+        id: 'method',
+        heading: 'Method',
+        intro:
+          'One person, the throughput of a team. The tools only work because the discipline does.',
+        entries: [
+          {
+            name: 'Prompts as specs',
+            description:
+              'A task prompt reads like a spec: scope, constraints, authorization, and a definition of done.',
+          },
+          {
+            name: 'Cross-model review',
+            description:
+              "Nothing merges on a single model's opinion. A different model reviews adversarially before I do.",
+          },
+          {
+            name: 'Agent-run QA',
+            description:
+              'Agents click through the product in a real browser before anything ships. Screenshots are the receipts.',
+          },
+          {
+            name: 'Privacy guards',
+            description:
+              'Git hooks enforce an identity contract on every commit — the repo stays clean by machine, not by memory.',
+          },
+        ],
+      },
+      {
+        id: 'hardware',
+        heading: 'Hardware',
+        entries: [
+          {
+            name: 'One machine',
+            description: 'An Apple Silicon Mac with too many terminal panes open.',
+          },
+        ],
+      },
+    ],
+  },
+  colophon: {
+    title: 'Colophon',
+    metaDescription:
+      'How zampa.dev was made: drafted, reviewed, and QA-tested by orchestrated AI agents under human direction — Astro, system fonts, Vercel, open source on GitHub.',
+    intro: 'How this site was made — and by whom.',
+    backHome: 'Back home',
+    sections: [
+      {
+        id: 'made',
+        heading: 'Built by agents, directed by a human',
+        body: [
+          'This site was drafted, built, reviewed, and QA-tested by AI coding agents working in parallel — one wrote the layout, another reviewed it adversarially, another clicked through every page in a real browser — under my direction, from first commit to deploy.',
+          'That is the same method the site describes. It is its own demo.',
+        ],
+      },
+      {
+        id: 'stack',
+        heading: 'Stack',
+        body: [
+          'Astro 7, statically generated. The one exception is the GitHub signal on the homepage: fetched server-side and re-validated at most once every 24 hours (ISR) — zero client-side calls.',
+          'System font stacks, no webfonts. English and Portuguese both render from a single typed content contract, so the two languages cannot silently drift apart.',
+          'Hosted on Vercel — every push to master deploys production automatically. No analytics, no trackers.',
+        ],
+        link: { label: 'Source on GitHub', href: 'https://github.com/ZaMpAdAKiNg/zampa.dev' },
+      },
+      {
+        id: 'design',
+        heading: 'Design',
+        body: [
+          '"Signal Instrument": a typographic instrument panel — monospaced indices, hairline rules, live readouts. Restraint over gimmick.',
+          'Contrast holds WCAG AA in both dark and light themes, and every page works with JavaScript disabled — motion is an enhancement, never a dependency.',
+        ],
+      },
+      {
+        id: 'privacy',
+        heading: 'Privacy',
+        body: [
+          'The repository is public and governed by a permanent identity contract: no real names, no employers, no client names, no personal data — audited retroactively across the full git history and enforced on every future commit by machine checks.',
+        ],
+        link: {
+          label: 'The contract (CLAUDE.md)',
+          href: 'https://github.com/ZaMpAdAKiNg/zampa.dev/blob/master/CLAUDE.md',
+        },
       },
     ],
   },
@@ -468,6 +693,14 @@ const pt: SiteContent = {
   footer: {
     tagline: 'Feito solo, orquestrando agentes.',
     rights: '© 2026 ZaMpA · zampa.dev',
+    navAriaLabel: 'Mapa do site',
+    nav: [
+      { label: 'agora', href: '/now' },
+      { label: 'o que uso', href: '/uses' },
+      { label: 'colofão', href: '/colophon' },
+      { label: 'GitHub', href: 'https://github.com/ZaMpAdAKiNg' },
+      { label: 'X', href: 'https://x.com/ZaMpAdAKiNg' },
+    ],
   },
   now: {
     title: 'Agora',
@@ -530,6 +763,174 @@ const pt: SiteContent = {
             text: 'CTO de um produto confidencial, sob NDA. Detalhes compartilhados sob acordo, a pedido.',
           },
         ],
+      },
+    ],
+  },
+  uses: {
+    title: 'O que eu uso',
+    metaDescription:
+      'Com o que o ZaMpA trabalha — os agentes de IA, o setup de orquestração e a stack de construir e entregar — no espírito do uses.tech.',
+    intro:
+      'Com o que eu trabalho de verdade — no espírito do uses.tech. A parte interessante não é o editor; são os agentes.',
+    updatedLabel: 'Atualizado',
+    updatedDate: '13 de julho de 2026',
+    backHome: 'Voltar ao início',
+    sections: [
+      {
+        id: 'agents',
+        heading: 'Agentes & orquestração',
+        intro:
+          'O coração do setup. Trabalho sozinho dirigindo times de agentes de IA em paralelo — todo o resto serve a essa parte.',
+        entries: [
+          {
+            name: 'Claude Code',
+            url: 'https://claude.com/claude-code',
+            description:
+              'Meu agente principal. Ele planeja, escreve, refatora e carrega a maior parte do trabalho diário em todos os projetos.',
+          },
+          {
+            name: 'Codex CLI',
+            url: 'https://github.com/openai/codex',
+            description:
+              'A segunda opinião. Um modelo diferente revisa o mesmo trabalho de forma adversarial — pega o que o primeiro racionaliza.',
+          },
+          {
+            name: 'Playwright',
+            url: 'https://playwright.dev',
+            description:
+              'QA de navegador, dirigido por agentes: cliques reais em páginas reais, com screenshots e logs de console como evidência.',
+          },
+          {
+            name: 'Servidores MCP',
+            url: 'https://modelcontextprotocol.io',
+            description:
+              'As mãos dos agentes — deploy, controle de navegador e infraestrutura expostos como ferramentas que eles chamam diretamente.',
+          },
+          {
+            name: 'Skills',
+            description:
+              'Uma biblioteca de skills reutilizáveis — disciplina de orquestração, protocolos de debate, pipelines de digest — que qualquer agente carrega sob demanda.',
+          },
+          {
+            name: 'Workspace',
+            description:
+              'Um workspace multi-agente que roda vários agentes de CLI lado a lado — uma tela, vários workers, um diretor.',
+          },
+        ],
+      },
+      {
+        id: 'shipping',
+        heading: 'Construir & entregar',
+        entries: [
+          {
+            name: 'Astro',
+            url: 'https://astro.build',
+            description:
+              'Sites static-first, este incluído. Rápido por padrão, e sem JavaScript no cliente a menos que a página mereça.',
+          },
+          {
+            name: 'TypeScript',
+            url: 'https://www.typescriptlang.org',
+            description:
+              'Em tudo. Tipos são o contrato que mantém uma frota de agentes honesta dentro do mesmo código.',
+          },
+          {
+            name: 'Vercel',
+            url: 'https://vercel.com',
+            description:
+              'Push na master e a produção sobe sozinha. ISR mantém os sinais renderizados no servidor frescos, sem babá.',
+          },
+          {
+            name: 'GitHub',
+            url: 'https://github.com/ZaMpAdAKiNg',
+            description:
+              'A identidade pública. A autoridade de tudo aqui é commit e tempo — o GitHub é a trilha de auditoria.',
+          },
+        ],
+      },
+      {
+        id: 'method',
+        heading: 'Método',
+        intro:
+          'Uma pessoa, a produtividade de um time. As ferramentas só funcionam porque a disciplina funciona.',
+        entries: [
+          {
+            name: 'Prompts como specs',
+            description:
+              'Um prompt de tarefa se lê como uma spec: escopo, restrições, autorização e uma definição de pronto.',
+          },
+          {
+            name: 'Revisão entre modelos',
+            description:
+              'Nada sobe com a opinião de um modelo só. Um modelo diferente revisa de forma adversarial antes de mim.',
+          },
+          {
+            name: 'QA por agente',
+            description:
+              'Agentes clicam pelo produto num navegador real antes de qualquer entrega. Screenshots são os recibos.',
+          },
+          {
+            name: 'Guardas de privacidade',
+            description:
+              'Git hooks impõem um contrato de identidade em cada commit — o repositório fica limpo por máquina, não por memória.',
+          },
+        ],
+      },
+      {
+        id: 'hardware',
+        heading: 'Hardware',
+        entries: [
+          {
+            name: 'Uma máquina',
+            description: 'Um Mac com Apple Silicon e painéis de terminal demais abertos.',
+          },
+        ],
+      },
+    ],
+  },
+  colophon: {
+    title: 'Colofão',
+    metaDescription:
+      'Como o zampa.dev foi feito: rascunhado, revisado e testado por agentes de IA orquestrados sob direção humana — Astro, fontes de sistema, Vercel, código aberto no GitHub.',
+    intro: 'Como este site foi feito — e por quem.',
+    backHome: 'Voltar ao início',
+    sections: [
+      {
+        id: 'made',
+        heading: 'Feito por agentes, dirigido por um humano',
+        body: [
+          'Este site foi rascunhado, construído, revisado e testado por agentes de IA trabalhando em paralelo — um escreveu o layout, outro revisou de forma adversarial, outro clicou por cada página num navegador real — sob a minha direção, do primeiro commit ao deploy.',
+          'É o mesmo método que o site descreve. Ele é a própria demo.',
+        ],
+      },
+      {
+        id: 'stack',
+        heading: 'Stack',
+        body: [
+          'Astro 7, gerado estaticamente. A única exceção é o sinal do GitHub na home: buscado no servidor e revalidado no máximo uma vez a cada 24 horas (ISR) — zero chamadas no cliente.',
+          'Fontes de sistema, sem webfonts. Inglês e português renderizam de um único contrato de conteúdo tipado, então as duas línguas não conseguem divergir em silêncio.',
+          'Hospedado na Vercel — cada push na master faz o deploy de produção automaticamente. Sem analytics, sem rastreadores.',
+        ],
+        link: { label: 'Código no GitHub', href: 'https://github.com/ZaMpAdAKiNg/zampa.dev' },
+      },
+      {
+        id: 'design',
+        heading: 'Design',
+        body: [
+          '"Signal Instrument": um painel de instrumentos tipográfico — índices monoespaçados, linhas finas, leituras ao vivo. Contenção em vez de firula.',
+          'O contraste segura WCAG AA nos temas escuro e claro, e toda página funciona com JavaScript desligado — movimento é um bônus, nunca uma dependência.',
+        ],
+      },
+      {
+        id: 'privacy',
+        heading: 'Privacidade',
+        body: [
+          'O repositório é público e regido por um contrato de identidade permanente: sem nomes reais, sem empregadores, sem nomes de clientes, sem dados pessoais — auditado retroativamente em todo o histórico do git e imposto em cada commit futuro por checagens de máquina.',
+        ],
+        link: {
+          label: 'O contrato (CLAUDE.md)',
+          href: 'https://github.com/ZaMpAdAKiNg/zampa.dev/blob/master/CLAUDE.md',
+        },
       },
     ],
   },

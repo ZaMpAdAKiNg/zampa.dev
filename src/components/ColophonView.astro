@@ -1,0 +1,147 @@
+---
+// /colophon — FOUNDATION-OWNED, shared, neutral (same pattern as NowView): the
+// locale pages are thin wrappers, this view resolves lang + content and renders
+// inside BaseLayout. Zero client-side JS; styling reuses the base tokens.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useContent, localizeHref } from '../lib/i18n';
+
+const { lang, t } = useContent(Astro);
+const c = t.colophon;
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${c.title} — ${t.meta.ogTitle}`}
+  description={c.metaDescription}
+  ogTitle={t.meta.ogTitle}
+  langLabel={t.nav.langLabel}
+  langSwitchAria={t.nav.langSwitchAria}
+  skipLabel={t.nav.skipToContent}
+>
+  <article class="colophon">
+    <header class="colophon-head">
+      <h1>{c.title}</h1>
+      <p class="lede">{c.intro}</p>
+    </header>
+
+    <div class="sections">
+      {
+        c.sections.map((section, i) => (
+          <section class="sec" aria-labelledby={`colophon-${section.id}`}>
+            <div class="sec-head">
+              <span class="sec-index" aria-hidden="true">
+                0{i + 1}
+              </span>
+              <h2 id={`colophon-${section.id}`}>{section.heading}</h2>
+            </div>
+            {section.body.map((paragraph) => (
+              <p class="body-p">{paragraph}</p>
+            ))}
+            {section.link && (
+              <a class="sec-link" href={section.link.href} target="_blank" rel="noopener noreferrer">
+                {section.link.label}
+                <span class="link-arrow" aria-hidden="true">&rarr;</span>
+              </a>
+            )}
+          </section>
+        ))
+      }
+    </div>
+
+    <a class="back" href={localizeHref('/', lang)}>&larr; {c.backHome}</a>
+  </article>
+</BaseLayout>
+
+<style>
+  .colophon {
+    animation: rise 0.5s ease both;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .colophon {
+      animation: none;
+    }
+  }
+
+  .colophon-head {
+    margin-bottom: 2.75rem;
+  }
+  h1 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(2.25rem, 6vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 640;
+  }
+  .lede {
+    margin: 0;
+    max-width: 34rem;
+    font-size: 1.1rem;
+    color: var(--muted);
+  }
+
+  .sections {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .sec-index {
+    font: 600 0.72rem/1 var(--font-mono);
+    color: var(--accent);
+    letter-spacing: 0.03em;
+  }
+  .sec-head h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 620;
+    letter-spacing: -0.01em;
+  }
+  .body-p {
+    margin: 0 0 0.85rem;
+    max-width: 38rem;
+    color: var(--fg);
+  }
+  .body-p:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .sec-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+    font: 500 0.85rem/1 var(--font-mono);
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .sec-link:hover {
+    color: var(--accent);
+  }
+  .link-arrow {
+    transition: transform 0.15s ease;
+  }
+  .sec-link:hover .link-arrow {
+    transform: translateX(3px);
+  }
+
+  .back {
+    display: inline-block;
+    margin-top: 2.5rem;
+    font: 500 0.9rem/1 var(--font-mono);
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--accent);
+  }
+</style>
