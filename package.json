@@ -21,6 +21,9 @@
   "allowScripts": {
     "esbuild@0.28.1": true
   },
+  "overrides": {
+    "path-to-regexp": "^6.3.0"
+  },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@types/node": "^26.1.1",
