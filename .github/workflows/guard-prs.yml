@@ -1,6 +1,7 @@
 # This repository does not accept external pull requests — solo project.
-# Closes any PR whose author is not the repository owner. Runs in the base
-# context (pull_request_target) and never checks out PR code.
+# Closes any PR whose author is not the repository owner or an allowlisted
+# bot. Runs in the base context (pull_request_target) and never checks out
+# PR code.
 name: guard-prs
 
 on:
@@ -12,7 +13,9 @@ permissions:
 
 jobs:
   close-external:
-    if: github.event.pull_request.user.login != github.repository_owner
+    if: >-
+      github.event.pull_request.user.login != github.repository_owner &&
+      !contains(fromJSON('["dependabot[bot]"]'), github.event.pull_request.user.login)
     runs-on: ubuntu-latest
     steps:
       - name: Close external PR
