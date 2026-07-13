@@ -4,9 +4,9 @@
 // This file is the ONLY place the site's copy lives. Both visual variants
 // (/a and /b) import `content` and render `content[lang]` — they MUST NOT
 // hardcode strings. Everything here ships to the browser bundle, so NOTHING
-// confidential may be added: the only permitted mention of the confidential
-// product is the "800+ commits" framing (never its name / what it is / where
-// it's incorporated / any fundraising).
+// confidential may be added: the only permitted mentions of the confidential
+// product are the "800+ commits" framing and the CTO role (never its name /
+// what it is / where it's incorporated / any fundraising).
 //
 // Consume it via the i18n helper:
 //   import { useContent } from '../lib/i18n';
@@ -98,8 +98,8 @@ export interface SiteContent {
   };
   authority: {
     heading: string;
-    /** The ONLY permitted confidential-product reference (commits + time only,
-     *  never the name / what it is / where incorporated / fundraising). */
+    /** The ONLY permitted confidential-product references (commits + time +
+     *  CTO role, never the name / what it is / where incorporated / fundraising). */
     trackRecordLine: string;
     /** Labels for GitHub-derived stats (numbers come from github.ts). */
     yearsLabel: string;
@@ -190,7 +190,7 @@ const en: SiteContent = {
   authority: {
     heading: 'Signal, not noise',
     trackRecordLine:
-      '800+ commits in ~4 months — solo, orchestrating agents — on a confidential product.',
+      '800+ commits in ~4 months — solo, orchestrating agents — as CTO of a confidential product.',
     yearsLabel: 'years on GitHub',
     reposLabel: 'public repositories',
     activeLabel: 'recent public events',
@@ -317,7 +317,7 @@ const en: SiteContent = {
         entries: [
           {
             label: 'Track record',
-            text: '800+ commits in ~4 months, solo, orchestrating agents on a confidential product.',
+            text: '800+ commits in ~4 months, solo, orchestrating agents, as CTO of a confidential product.',
           },
           {
             label: 'Method',
@@ -335,7 +335,7 @@ const en: SiteContent = {
         entries: [
           {
             label: 'Confidential',
-            text: 'Current client work is covered by an NDA. Details shared on request, under agreement.',
+            text: 'CTO of a confidential product, under NDA. Details shared on request, under agreement.',
           },
         ],
       },
@@ -382,7 +382,7 @@ const pt: SiteContent = {
   authority: {
     heading: 'Sinal, não ruído',
     trackRecordLine:
-      '800+ commits em ~4 meses — solo, orquestrando agentes — em um produto confidencial.',
+      '800+ commits em ~4 meses — solo, orquestrando agentes — como CTO de um produto confidencial.',
     yearsLabel: 'anos no GitHub',
     reposLabel: 'repositórios públicos',
     activeLabel: 'eventos públicos recentes',
@@ -509,7 +509,7 @@ const pt: SiteContent = {
         entries: [
           {
             label: 'Histórico',
-            text: '800+ commits em ~4 meses, solo, orquestrando agentes em um produto confidencial.',
+            text: '800+ commits em ~4 meses, solo, orquestrando agentes, como CTO de um produto confidencial.',
           },
           {
             label: 'Método',
@@ -527,7 +527,7 @@ const pt: SiteContent = {
         entries: [
           {
             label: 'Confidencial',
-            text: 'O trabalho atual com cliente está sob NDA. Detalhes compartilhados sob acordo, a pedido.',
+            text: 'CTO de um produto confidencial, sob NDA. Detalhes compartilhados sob acordo, a pedido.',
           },
         ],
       },

@@ -1,0 +1,25 @@
+# This repository does not accept external pull requests — solo project.
+# Closes any PR whose author is not the repository owner. Runs in the base
+# context (pull_request_target) and never checks out PR code.
+name: guard-prs
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  close-external:
+    if: github.event.pull_request.user.login != github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close external PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh pr close "$PR" --repo "$REPO" \
+            --comment "Thanks for the interest — this is a solo project and does not accept external pull requests."
