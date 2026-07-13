@@ -36,6 +36,8 @@ identity, leave it out and ask.
 ## Working notes
 
 - Copy lives in `src/data/content.ts` (single source of truth, EN + PT).
-- Deploys: `vercel build --prod && vercel deploy --prebuilt --prod`.
+- Deploys: automatic — every push to `master` triggers a Vercel production
+  deploy (Git integration). Manual fallback: `vercel build --prod && vercel
+  deploy --prebuilt --prod`.
 - `vercel.json` holds host-based redirects (`x.zampa.dev` → X profile);
   Astro `redirects` in `astro.config.mjs` hold path-based ones.
