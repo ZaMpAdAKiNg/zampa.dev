@@ -541,7 +541,7 @@ const en: SiteContent = {
         body: [
           'Astro 7, statically generated. The one exception is the GitHub signal on the homepage: fetched server-side and re-validated at most once every 24 hours (ISR) — zero client-side calls.',
           'System font stacks, no webfonts. English and Portuguese both render from a single typed content contract, so the two languages cannot silently drift apart.',
-          'Hosted on Vercel — every push to master deploys production automatically. No analytics, no trackers.',
+          'Hosted on Vercel — every push to master deploys production automatically. Cookie-free pageview analytics via Umami; no advertising trackers or custom events.',
         ],
         link: { label: 'Source on GitHub', href: 'https://github.com/ZaMpAdAKiNg/zampa.dev' },
       },
@@ -558,6 +558,7 @@ const en: SiteContent = {
         heading: 'Privacy',
         body: [
           'The repository is public and governed by a permanent identity contract: no real names, no employers, no client names, no personal data — audited retroactively across the full git history and enforced on every future commit by machine checks.',
+          'Umami runs only on zampa.dev, respects Do Not Track, and receives neither query strings nor URL fragments. Referrer URLs are stripped of both before they are sent.',
         ],
         link: {
           label: 'The contract (CLAUDE.md)',
@@ -909,7 +910,7 @@ const pt: SiteContent = {
         body: [
           'Astro 7, gerado estaticamente. A única exceção é o sinal do GitHub na home: buscado no servidor e revalidado no máximo uma vez a cada 24 horas (ISR) — zero chamadas no cliente.',
           'Fontes de sistema, sem webfonts. Inglês e português renderizam de um único contrato de conteúdo tipado, então as duas línguas não conseguem divergir em silêncio.',
-          'Hospedado na Vercel — cada push na master faz o deploy de produção automaticamente. Sem analytics, sem rastreadores.',
+          'Hospedado na Vercel — cada push na master faz o deploy de produção automaticamente. Analytics de pageviews sem cookies via Umami; sem rastreadores de publicidade nem eventos personalizados.',
         ],
         link: { label: 'Código no GitHub', href: 'https://github.com/ZaMpAdAKiNg/zampa.dev' },
       },
@@ -926,6 +927,7 @@ const pt: SiteContent = {
         heading: 'Privacidade',
         body: [
           'O repositório é público e regido por um contrato de identidade permanente: sem nomes reais, sem empregadores, sem nomes de clientes, sem dados pessoais — auditado retroativamente em todo o histórico do git e imposto em cada commit futuro por checagens de máquina.',
+          'O Umami roda somente no zampa.dev, respeita o Do Not Track e não recebe parâmetros de busca nem fragmentos de URL. Ambos também são removidos das URLs de referência antes do envio.',
         ],
         link: {
           label: 'O contrato (CLAUDE.md)',

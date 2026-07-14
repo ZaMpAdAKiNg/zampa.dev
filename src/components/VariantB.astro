@@ -16,6 +16,7 @@ import type { SiteContent, Lang } from '../data/content';
 import type { GithubData } from '../lib/github';
 import Seo from './Seo.astro';
 import FooterNav from './FooterNav.astro';
+import UmamiAnalytics from './UmamiAnalytics.astro';
 
 interface Props {
   t: SiteContent;
@@ -86,6 +87,7 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
       ogTitle={t.meta.ogTitle}
       pathname={pathname}
     />
+    <UmamiAnalytics />
   </head>
   <body>
     <a class="skip" href="#main">{t.nav.skipToContent}</a>

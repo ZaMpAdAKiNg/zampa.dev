@@ -1,0 +1,41 @@
+---
+const websiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID?.trim();
+---
+
+{
+  websiteId && (
+    <>
+      <script is:inline>
+        window.umamiBeforeSend = (_type, payload) => {
+          const stripUrlDetails = (value, includeOrigin = false) => {
+            if (!value) return '';
+
+            try {
+              const url = new URL(value, window.location.origin);
+              return includeOrigin ? `${url.origin}${url.pathname}` : url.pathname;
+            } catch {
+              return String(value).split(/[?#]/, 1)[0];
+            }
+          };
+
+          return {
+            ...payload,
+            url: stripUrlDetails(payload.url),
+            referrer: stripUrlDetails(payload.referrer, true),
+          };
+        };
+      </script>
+      <script
+        is:inline
+        defer
+        src="https://cloud.umami.is/script.js"
+        data-website-id={websiteId}
+        data-domains="zampa.dev"
+        data-do-not-track="true"
+        data-exclude-search="true"
+        data-exclude-hash="true"
+        data-before-send="umamiBeforeSend"
+      ></script>
+    </>
+  )
+}

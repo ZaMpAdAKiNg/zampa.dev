@@ -7,6 +7,7 @@ import { switchLangHref, localizeHref } from '../lib/i18n';
 import { content, type Lang } from '../data/content';
 import Seo from '../components/Seo.astro';
 import FooterNav from '../components/FooterNav.astro';
+import UmamiAnalytics from '../components/UmamiAnalytics.astro';
 
 interface Props {
   lang: Lang;
@@ -45,6 +46,7 @@ const isNow = currentPath.replace(/\/$/, '').endsWith('/now') || currentPath.rep
       ogTitle={ogTitle}
       pathname={currentPath}
     />
+    <UmamiAnalytics />
   </head>
   <body>
     <a class="skip" href="#main">{skipLabel}</a>
