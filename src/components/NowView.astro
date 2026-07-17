@@ -225,6 +225,21 @@ const n = t.now;
     color: var(--accent);
   }
 
+  @media (max-width: 760px), (pointer: coarse) {
+    .back {
+      position: relative;
+    }
+    .back::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: max(100%, 44px);
+      height: 44px;
+      transform: translate(-50%, -50%);
+    }
+  }
+
   @media (max-width: 520px) {
     .entries li {
       grid-template-columns: 1fr;

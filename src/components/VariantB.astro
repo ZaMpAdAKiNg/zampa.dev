@@ -529,6 +529,11 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
           display: none;
         }
       }
+      @media (max-width: 340px) {
+        .brand-word {
+          display: none;
+        }
+      }
       .nav {
         display: flex;
         align-items: center;
@@ -575,6 +580,34 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
       .nav .lang:hover {
         color: var(--fg);
         border-color: var(--accent);
+      }
+
+      @media (max-width: 760px), (pointer: coarse) {
+        .brand,
+        .nav > a {
+          position: relative;
+        }
+        .brand::before,
+        .nav > a::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: max(100%, 44px);
+          height: 44px;
+          transform: translate(-50%, -50%);
+        }
+        .nav > a:not(.lang) + a:not(.lang) {
+          margin-left: 0.3rem;
+        }
+        .nav .lang {
+          margin-left: calc(0.4rem + 2px);
+        }
+        .nav .lang::before {
+          right: 0;
+          left: auto;
+          transform: translateY(-50%);
+        }
       }
 
       /* ---------------------------------------------------------------------
@@ -683,14 +716,15 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
       .hl-line {
         display: block;
         overflow: hidden;
-        padding-bottom: 0.04em;
+        padding-bottom: 0.12em;
+        margin-bottom: -0.08em;
       }
       .hl-line:last-child .hl-inner {
         color: var(--accent);
       }
       .hl-inner {
         display: block;
-        transform: translateY(102%);
+        transform: translateY(calc(102% + 0.08em));
         animation: rise-line 0.86s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         animation-delay: var(--d, 0s);
       }
@@ -1034,6 +1068,23 @@ const idLabel = lang === 'pt' ? 'identidade' : 'identity';
       }
       .proj-link:hover .btn-arrow {
         transform: translate(2px, -2px);
+      }
+
+      @media (max-width: 760px), (pointer: coarse) {
+        .handle,
+        .proj-link {
+          position: relative;
+        }
+        .handle::before,
+        .proj-link::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: max(100%, 44px);
+          height: 44px;
+          transform: translate(-50%, -50%);
+        }
       }
 
       /* ---------------------------------------------------------------------
