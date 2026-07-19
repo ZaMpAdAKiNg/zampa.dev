@@ -1,0 +1,68 @@
+# touch-targets — the repo's first CI test. Boots the site and hit-tests every
+# ::before-expanded tap target (brand, header nav + language toggle, hero handle,
+# project links, /uses entry links, /colophon section links, back-home links and
+# the footer nav) at the tightest supported viewport (320x568), in both locales,
+# asserting an effective hit area of >= 44x44 CSS px. Runs on PRs; additive to
+# guard-prs.yml.
+name: touch-targets
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A PR pushed to twice in a row only needs the newer run.
+concurrency:
+  group: touch-targets-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  touch-targets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # `persist-credentials: false` keeps the GitHub token out of the local git
+      # config. This job uploads artifacts on failure, so a persisted token is a
+      # leak waiting for someone to widen the upload paths (zizmor: artipacked).
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      # Pinned to the major the site is developed on. `engines` only requires
+      # >=20.9, but matching the dev machine keeps "green locally, red in CI"
+      # from ever being a Node-version story.
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # `--with-deps` is required on a bare Linux runner: the chromium build
+      # needs system libraries ubuntu-latest does not ship.
+      - name: Install Playwright (chromium + system deps)
+        run: npx playwright install --with-deps chromium
+
+      # The suite boots and stops `astro dev` itself (global setup/teardown),
+      # explicitly with `--background`, so it never needs a TTY. GitHub already
+      # sets CI=true, which switches the reporter to github + html.
+      - name: Run touch-target guard
+        run: npm run test:touch
+
+      # The HTML report carries the measured per-target tables — that is what
+      # makes a CI failure diagnosable without reproducing it locally.
+      - name: Upload report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
