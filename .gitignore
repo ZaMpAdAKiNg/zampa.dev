@@ -17,6 +17,12 @@ node_modules/
 *.log
 npm-debug.log*
 
+# playwright (touch-target guard)
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
 # harness state
 .overclock-app/
 .remember/
