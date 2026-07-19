@@ -23,8 +23,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      # `persist-credentials: false` keeps the GitHub token out of the local git
+      # config. This job uploads artifacts on failure, so a persisted token is a
+      # leak waiting for someone to widen the upload paths (zizmor: artipacked).
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       # Pinned to the major the site is developed on. `engines` only requires
       # >=20.9, but matching the dev machine keeps "green locally, red in CI"
